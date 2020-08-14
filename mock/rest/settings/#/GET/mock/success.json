@@ -1,0 +1,38 @@
+{
+  "settings": {
+    "networks": [
+      {
+        "id": 0,
+        "ssid": "frippe4",
+        "rssi": "-65db",
+        "encryption": "WEP",
+        "quality": "75%",
+        "status": "connected"
+      },
+      {
+        "id": 1,
+        "ssid": "frippe5",
+        "rssi": "-85db",
+        "encryption": "WPA2",
+        "quality": "30%",
+        "status": "configured"
+      },
+      {
+        "id": 2,
+        "ssid": "Evis iPhone",
+        "rssi": "-55db",
+        "encryption": "WPA2",
+        "quality": "90%",
+        "status": "unavailable"
+      },
+      {
+        "id": 3,
+        "ssid": "Home Networks",
+        "rssi": "-55db",
+        "encryption": "WPA2",
+        "quality": "90%",
+        "status": "not used"
+      }
+    ]
+  }
+}
