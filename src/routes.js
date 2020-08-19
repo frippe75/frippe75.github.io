@@ -36,6 +36,7 @@ const Colors = React.lazy(() => import('./views/theme/colors/Colors'));
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'));
 const Settings = React.lazy(() => import('./views/settings/Settings'));
 const Terminals = React.lazy(() => import('./views/terminals/Terminals'));
+//const Welcome = React.lazy(() => import('./pages/welcome/Welcome'));
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'));
 const Users = React.lazy(() => import('./views/users/Users'));
 const User = React.lazy(() => import('./views/users/User'));

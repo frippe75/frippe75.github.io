@@ -116,7 +116,7 @@ class Settings extends Component {
 	Unusable quality: 8% ~= -96db
 	*/
  
-        installPrompt = null;
+  installPrompt = null;
 
 	state = {
 		settings: [],
@@ -126,24 +126,24 @@ class Settings extends Component {
                 progress: 0 
 	};
       
-      toggleModal = () => {
-  	this.setState((currentState) => ({
-	    modal: !currentState.modal            
-         }));
-      }
+  toggleModal = () => {
+    this.setState((currentState) => ({
+      modal: !currentState.modal            
+    }));
+  }
       
-      isWebBluetoothEnabled() {
-	    if (navigator.bluetooth) {
-	      return true;
-	    } else {
-	      console.log('Web Bluetooth API is not available.\n' +
-		  'Please make sure the "Experimental Web Platform features" flag is enabled.');
-	      return false;
-	    }
-      }
- 
+  isWebBluetoothEnabled() {
+    if (navigator.bluetooth) {
+      return true;
+    } else {
+      console.log('Web Bluetooth API is not available.\n' +
+      'Please make sure the "Experimental Web Platform features" flag is enabled.');
+      return false;
+    }
+  }
 
-      onClickPair2() {
+
+  onClickPair2() {
 	  if (!bleConnected) {
 	    // Request the device for connection and get its name after successful connection.
 	    espconfig.request()
@@ -157,11 +157,11 @@ class Settings extends Component {
 	    // Disconnect from the connected device.
 	    espconfig.disconnect();
 	  }
-      }
+  }
 
-      onClickPair() {
+  onClickPair() {
 	  console.log('Requesting Bluetooth Device...');
-          let options = {
+    let options = {
 		  filters: [
 		    {namePrefix: 'TermBee'}
 		  ],
@@ -192,10 +192,10 @@ class Settings extends Component {
 	  .catch(error => {
 	    console.log('Arghhhhhh! ' + error);
 	  });
-      }
+  }
 
-     async installApp() {
-	    if(!this.installPrompt) return false;
+  async installApp() {
+	  if(!this.installPrompt) return false;
 	    this.installPrompt.prompt();
 	    let outcome = await this.installPrompt.userChoice;
 	    if(outcome.outcome=='accepted'){
@@ -210,7 +210,7 @@ class Settings extends Component {
 	    this.setState({ installButton:false })
       }
 
-      async onClickScan() {
+  async onClickScan() {
    	let i = 0
         //let progress = 0
 
@@ -451,16 +451,11 @@ class Settings extends Component {
               </CModalFooter>
             </CModal>
 
-	
+	        </CCardBody>
 
-            </CCardBody>
-          
            </CCollapse>
-
           </CCard>
-        </CCol>
-
-      
+        </CCol> 
       </CRow>
     </>
     );
@@ -468,4 +463,3 @@ class Settings extends Component {
 }
 
 export default Settings
-
