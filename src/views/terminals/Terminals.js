@@ -1,6 +1,6 @@
 //import React from 'react'
 import React, { Component } from 'react';
-import { Terminal } from 'xterm'
+import TermBee from '../../TermBee'
 import {
   CBadge,
   CCard,
@@ -70,89 +70,34 @@ class Terminals extends Component {
 
     // layout is an array of objects, see the demo for more complete usage
     const layout = [
-      {i: 'a', x: 0, y: 0, w: 1, h: 1, isResizable:true },
-      {i: 'b', x: 0, y: 0, w: 1, h: 1},
-      {i: 'c', x: 0, y: 0, w: 1, h: 1},
-      {i: 'd', x: 0, y: 0, w: 2, h: 1},
-      {i: 'e', x: 0, y: 0, w: 2, h: 2}
+      {i: 'a', x: 0, y: 0, w: 5, h: 3, isResizable:true },
+      {i: 'b', x: 0, y: 10, w: 5, h: 3},
+      {i: 'c', x: 1, y: 3, w: 5, h: 3},
+
     ];
 
     return (
+      <>
       <div>
-        <GridLayout className="layout" layout={layout} draggableHandle=".card-header" cols={3} rowHeight={110} width={1000}>
-		<div key="a">
-		  <CCard>
-		    <CCardHeader>
-		      Terminal 1 - 192.168.0.13 (@root)
-		      <div className="card-header-actions">
-		        <CIcon name="cil-x-circle" className="float-right"/>
-		      </div>
-		    </CCardHeader>
-		    <CCardBody>		
-			Some text to fill out the card.  		
-		    </CCardBody>
-		  </CCard>
-		</div>
-		<div key="b">
-		  <CCard>
-		    <CCardHeader>
-		      Terminal 2 - 192.168.0.13 (@root)
-		      <div className="card-header-actions">
-		        <CIcon name="cil-x-circle" className="float-right"/>
-		      </div>
-		    </CCardHeader>
-		    <CCardBody>		
-			Some text to fill out the card.  		
-		    </CCardBody>
-		  </CCard>
-		</div>
-		<div key="c">
-		  <CCard>
-		    <CCardHeader>
-		      Terminal 3 - 192.168.0.13 (@root)
-		      <div className="card-header-actions">
-		        <CIcon name="cil-x-circle" className="float-right"/>
-		      </div>
-		    </CCardHeader>
-		    <CCardBody>		
-			Some text to fill out the card.  		
-		    </CCardBody>
-		  </CCard>
-		</div>
-		<div key="d">
-		  <CCard>
-		    <CCardHeader>
-		      Terminal 4 - 192.168.0.13 (@root)
-		      <div className="card-header-actions">
-		        <CIcon name="cil-x-circle" className="float-right"/>
-		      </div>
-		    </CCardHeader>
-		    <CCardBody>		
-			Some text to fill out the card.  		
-		    </CCardBody>
-		  </CCard>
-		</div>
-		<div key="e">
-		  <CCard>
-		    <CCardHeader>
-		      Terminal 5 - 192.168.0.13 (@root)
-		      <div className="card-header-actions">
-		        <CIcon name="cil-x-circle" className="float-right"/>
-		      </div>
-		    </CCardHeader>
-		    <CCardBody>		
-			Some text to fill out the card. This do require some more text to fill out the full card. This was not eough so I added some more text
-                        Some text to fill out the card. This do require some more text to fill out the full card. This was not eough so I added some more text
-                        Some text to fill out the card. This do require some more text to fill out the full card. This was not eough so I added some more text
-                        Some text to fill out the card. This do require some more text to fill out the full card. This was not eough so I added some more text
-                          		
-		    </CCardBody>
-		  </CCard>
-		</div>
+        <GridLayout className="layout" layout={layout} draggableHandle=".card-header" cols={10} rowHeight={50} width={1800}>
+
+          <div key="a">
+            <TermBee name={"Tutorial"} speed={2} rows={24} cols={80} cast={"/termbee.cast"}/>
+          </div>
+         
+          <div key="b">
+            <TermBee name={"Tutorial"} speed={1.3} rows={24} cols={80} cast={"/termbee.cast"}/>
+          </div>
+ 
+          <div key="c">
+            <TermBee name={"Running htop"} loop={true} speed={0.7} rows={24} cols={40} cast={"/termbee-htop.cast"}/>
+          </div>
+          
         </GridLayout>
 	
 
       </div>
+      </>
     );
   }
 }
