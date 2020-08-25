@@ -5,6 +5,7 @@ import 'xterm/css/xterm.css'
 import { WebLinksAddon } from 'xterm-addon-web-links';
 import { FitAddon } from 'xterm-addon-fit';
 import {
+  CButton,
   CCard,
   CCardBody, 
   CCardHeader,
@@ -19,6 +20,10 @@ function sleep(ms) {
 }
 const divStyle = {
   "background-color": 'terminal'
+};
+
+const cardStyle = {
+  "padding": 0
 };
 
 
@@ -41,6 +46,7 @@ class TermBee extends Component {
   playCast(url) {
     const term2 = this.term
     const speed = this.props.speed
+    //const runFit = this.runFit
 
     fetch(url)
     .then(function(response){
@@ -50,9 +56,29 @@ class TermBee extends Component {
       console.log("speed " + speed + " ok");
 
       const lines = data.trim().split('\n').filter(txt => txt)
+      const header = JSON.parse(lines[0])
+      console.log("width: " + header.width + " height: " + header.height)
       const events = lines.slice(1)
 
-      //var audio = new Audio('/sounds/key1.mp3')
+      term2.resize(header.width, header.height)
+      
+
+      /*
+      this.term.setOption('theme', {
+        background: this.props.background,
+        foreground: '#8b9fa9',
+        fontFamily: 'Lucida Console',
+        fontSize: this.props.fontSize,
+        cols: this.props.cols,
+	      rows: this.props.rows
+    });
+    this.term.open(this.termElm)
+    this.term.loadAddon(new WebLinksAddon())
+    
+    const fitAddon = new FitAddon();
+    this.term.loadAddon(fitAddon);
+    fitAddon.fit();
+    */
       
       var a = events.map(e => {
         const j = JSON.parse(e)
@@ -71,34 +97,42 @@ class TermBee extends Component {
     }); //.bind(this);
   }
 
+  runFit() {
+    //this.term.
+    console.log("Fitting")
+    const fitAddon = new FitAddon();
+    this.term.loadAddon(fitAddon);
+    fitAddon.fit();
+  }
+
   async componentDidMount() {
 
     const term = new Terminal({
       cursorBlink: "block",
       rendererType: 'dom', // default is canvas
     });
-  this.term = term 
-   console.log("Props:" + this.props.name);
+    this.term = term 
+    console.log("Props:" + this.props.name);
 
     this.term.setOption('theme', {
-        background: '#0e2a35',
+        background: this.props.background,
         foreground: '#8b9fa9',
         fontFamily: 'Lucida Console',
-        fontSize: '15px',
+        fontSize: this.props.fontSize,
         cols: this.props.cols,
 	      rows: this.props.rows
     });
     this.term.open(this.termElm)
     this.term.loadAddon(new WebLinksAddon())
-    /*
+    
     const fitAddon = new FitAddon();
     this.term.loadAddon(fitAddon);
     fitAddon.fit();
-    */
+    
 
     //this.term = term
 
-    this.playCast(this.props.cast)
+    this.playCast("/casts/" + this.props.cast)
 
     console.log("fetching " + this.props.cast + " ok");
   }  
@@ -109,12 +143,22 @@ class TermBee extends Component {
 
           <CCard>
             <CCardHeader>
-              Terminal - {this.props.name} (@root) {this.props.cols}x{this.props.rows} cast from {this.props.cast}
+              Terminal - {this.props.name} (@root) {this.props.cols}x{this.props.rows} cast from {this.props.cast} {"      "} 
+              
+              <CButton
+                variant="ghost" color="secondary" size="sm"
+                onClick={ () => { this.runFit() } }
+              >
+              Fit
+
+              </CButton>
+
               <div className="card-header-actions">
-                <CIcon name="cil-x-circle" className="float-right"/>
+                  <CIcon name="cil-x-circle" className="float-right"/>
               </div>
+
             </CCardHeader>
-            <CCardBody color="terminal"  height={this.props.rows*12}>
+            <CCardBody style={cardStyle} color={this.props.background}  height={this.props.rows*25}>
               <div className={this.props.termy} ref={ref=>this.termElm = ref}></div>
             </CCardBody>
           </CCard>
@@ -129,7 +173,9 @@ TermBee.defaultProps = {
   cast: "./props.cast",
   cols: 80,
   rows: 24,
-  height: 100,
+  height: 200,
+  fontSize: 20,
+  background: "#0e2a35",
   loop: false,
   speed: 1
 }

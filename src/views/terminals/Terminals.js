@@ -1,6 +1,7 @@
-//import React from 'react'
-import React, { Component } from 'react';
-import TermBee from '../../TermBee'
+import React, { Component, useState } from 'react';
+import TermBee from '../../TermBee';
+import IdleTimer from 'react-idle-timer'       // used for screenlock
+import GaussianBlur from 'react-gaussian-blur' // used for screenlock
 import {
   CBadge,
   CCard,
@@ -9,98 +10,189 @@ import {
   CCardHeader,
   CCol,
   CRow,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
+  CButton,
   CCollapse,
   CFade,
   CSwitch,
+  CForm,
+  CInput,
+  CInputGroup,
+  CInputGroupPrepend,
+  CInputGroupText,
   CLink
 } from  '@coreui/react'
 import CIcon from '@coreui/icons-react'
-//import * as attach from 'xterm/lib/addons/attach/attach'
 import GridLayout from 'react-grid-layout';
 
-//const Terminals = () => {
 class Terminals extends Component {
-
-/*
-  async componentDidMount() {
-    const protocol = (window.location.protocol === 'https:') ? 'wss://' : 'ws://';
-    console.log("TEST TEST FRIPPE" + this.props.termy);
-    let socketURL = protocol + window.location.hostname + ((window.location.port) ? (':' + window.location.port) : '') + '/terminals/'
+  state = {
+		blur: 0 
+  };
+  
+  constructor(props) {
+    super(props)
     
-    const term = new Terminal({
-	cursorBlink: "block"
-    });
-    term.setOption('theme', {
-        background: '#0e2a35',
-        foreground: '#8b9fa9',
-        fontFamily: 'Lucida Console',
-        fontSize: '15px',
-        cols: 80,
-	rows: 24
-       
-    });
-    term.open(this.termElm);
-    //term.open(document.getElementById(this.props.termy));
-
-    term.attachCustomKeyEventHandler(function (e) {
-  	// Ctrl + Shift + C
-     	if (e.ctrlKey && e.shiftKey && (e.keyCode === 3)) {
-    		var copySucceeded = document.execCommand('copy');
-    		console.log('copy succeeded', copySucceeded);
-    		return false;
-  	}
-    });
-    
-    const res = await fetch('http://localhost:4001/rest/v1/wifi/scan' , {method: 'GET'})
-    const processId = await res.text()
-    
-    // const pid = processId;
-    socketURL += processId;
-    const socket = new WebSocket(socketURL);
-    
-    socket.onopen = () => {
-      //term.attach(socket);
-      term._initialized = true;
-    }
-    this.term = term
+    this.idleTimer = null
+    this.handleOnAction = this.handleOnAction.bind(this)
+    this.handleOnActive = this.handleOnActive.bind(this)
+    this.handleOnIdle = this.handleOnIdle.bind(this)
   }
-*/
 
-  render() {
+  componentDidMount() {
+    this.setState({ 
+      blur: 0,
+      modal: false, 
+      locked: false
+    })
+  }
+
+  handleOnAction (event) {
+    //console.log('IDLER: user did something', event)
+    // users got back from after being idle, present password prompt
+    if (this.state.locked && !this.state.modal) {
+      this.setState({ modal: true })
+    }
+  }
+ 
+  handleOnActive (event) {
+    //console.log('IDLER: user is active', event)
+    //console.log('IDLER: time remaining', this.idleTimer.getRemainingTime())
+  }
+ 
+  handleOnIdle (event) {
+    this.setState({ blur: 10, locked: true })
+        
+    console.log('IDLER: user is idle', event)
+    console.log('IDLER: last active', this.idleTimer.getLastActiveTime())
+  }
+  onClickLogin () {
+    //this.setState({ modal: false, locked: false })
+    //window.alert("Login")
+  }
+  toggleModal = () => {
+    this.setState((currentState) => ({
+      modal: !currentState.modal            
+    }));
+  }
+
+  renderLayout() {
+
+    const gridCols = 30
 
     // layout is an array of objects, see the demo for more complete usage
     const layout = [
-      {i: 'a', x: 0, y: 0, w: 5, h: 3, isResizable:true },
-      {i: 'b', x: 0, y: 10, w: 5, h: 3},
-      {i: 'c', x: 1, y: 3, w: 5, h: 3},
-
+      {i: 'a', x: 0, y: 0, w: gridCols/2-3, h: 3, isResizable:true },
+      {i: 'b', x: 10, y: 6, w: gridCols/2-3, h: 3},
+      {i: 'c', x: 8, y: 3, w: gridCols/2-2, h: 3},
+      {i: 'd', x: 12, y: 0, w: gridCols/2+2, h: 3},
+      {i: 'e', x: 2, y: 5, w: gridCols/3 + 1, h: 5, isResizable:true},
+      {i: 'f', x: 0, y: 7, w: gridCols/5, h: 1},
+      {i: 'g', x: 0, y: 8, w: gridCols/5, h: 1},
+      {i: 'h', x: 0, y: 9, w: gridCols/5, h: 1},
+      {i: 'i', x: 0, y: 8, w: gridCols/5, h: 1},
+      {i: 'j', x: 0, y: 9, w: gridCols/5, h: 1},
     ];
 
     return (
       <>
       <div>
-        <GridLayout className="layout" layout={layout} draggableHandle=".card-header" cols={10} rowHeight={50} width={1800}>
+        <IdleTimer
+            ref={ref => { this.idleTimer = ref }}
+            timeout={1000 * 10 * 1} // 1-minute
+            onActive={this.handleOnActive}
+            onIdle={this.handleOnIdle}
+            onAction={this.handleOnAction}
+            debounce={250}
+          />
 
-          <div key="a">
-            <TermBee name={"Tutorial"} speed={2} rows={24} cols={80} cast={"/termbee.cast"}/>
-          </div>
-         
-          <div key="b">
-            <TermBee name={"Tutorial"} speed={1.3} rows={24} cols={80} cast={"/termbee.cast"}/>
-          </div>
- 
-          <div key="c">
-            <TermBee name={"Running htop"} loop={true} speed={0.7} rows={24} cols={40} cast={"/termbee-htop.cast"}/>
-          </div>
+          <GridLayout className="layout" layout={layout} draggableHandle=".card-header" cols={gridCols} rowHeight={40} width={2200}>
+
+            <div key="a">
+              <TermBee name={"Tutorial"} speed={2} rows={24} cols={80} cast={"termbee.cast"}/>
+            </div>
           
-        </GridLayout>
-	
+            <div key="b">
+              <TermBee name={"Tutorial"} speed={1.3} rows={24} cols={80} cast={"termbee.cast"}/>
+            </div>
 
+            <div key="e">
+              <TermBee name={"Author Fredrik Tarnell"} loop={true} background={"#FFFFFF"} speed={1} rows={100} cols={70} cast={"termbee-author.cast"}/>
+            </div>
+  
+            <div key="c">
+              <TermBee name={"Running htop"} loop={true} background={"#000000"} speed={0.7} rows={24} cols={80} cast={"termbee-htop.cast"}/>
+            </div>
+            
+            <div key="d">
+              <TermBee name={"Apache access.log tail"} loop={true} background={"#333333"} speed={1} rows={26} cols={135} cast={"termbee-apache.cast"}/>
+            </div>
+
+            <div key="f"></div>
+            <div key="g"></div>
+            <div key="h"></div>
+            <div key="i"></div>
+            <div key="j"></div>
+          </GridLayout>
+        
       </div>
       </>
     );
   }
+  // Difficult to have the SVG gaussian filter hidden.
+  // Having it in the DOM 100% of the time caused performance issues. Moved to separate function
+  renderLocked() {
+    return ( 
+      <>
+        <GaussianBlur x={this.state.blur} y={this.state.blur}>
+          {this.renderLayout()}
+        </GaussianBlur>
+        
+        <CModal 
+          centered={true}
+          show={this.state.modal}  
+        >
+          <CModalBody>
+            <CForm>
+              <h1>Login</h1>
+              <p className="text-muted">You were locked out due to inactivity</p>
+
+              <CInputGroup className="mb-4">
+                <CInputGroupPrepend>
+                  <CInputGroupText>
+                    <CIcon name="cil-lock-locked" />
+                  </CInputGroupText>
+                </CInputGroupPrepend>
+                <CInput type="password" placeholder="Password" autoComplete="current-password" />
+              </CInputGroup>
+              <CRow>
+                <CCol xs="6">
+                  <CButton 
+                    color="seconday" 
+                    className="px-4"
+                    onClick={this.onClickLogin()}
+                  >Login</CButton>
+                </CCol>
+                
+              </CRow>
+            </CForm>
+          </CModalBody>
+        </CModal>
+      </>
+      
+    );
+  }
+  render() {
+    return(
+      <>
+      {this.state.locked ? this.renderLocked() : this.renderLayout()}
+      </>
+    );
+  }
 }
-/* <div className={this.props.termy} ref={ref=>this.termElm = ref}></div> */
 
 export default Terminals

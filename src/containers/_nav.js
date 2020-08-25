@@ -4,11 +4,9 @@ export default [
     name: 'Dashboard',
     to: '/dashboard',
     icon: 'cil-speedometer',
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    }
+
   },
+/*
   {
     _tag: 'CSidebarNavTitle',
     _children: ['Theme']
@@ -25,10 +23,12 @@ export default [
     to: '/theme/typography',
     icon: 'cil-pencil',
   },
+  */
   {
     _tag: 'CSidebarNavTitle',
     _children: ['Components']
   },
+  /*
   {
     _tag: 'CSidebarNavDropdown',
     name: 'Base',
@@ -145,6 +145,7 @@ export default [
       }
     ],
   },
+  
   {
     _tag: 'CSidebarNavItem',
     name: 'Charts',
@@ -206,35 +207,35 @@ export default [
       }
     ]
   },
+  */
   {
     _tag: 'CSidebarNavItem',
     name: 'Settings',
     to: '/settings',
     icon: 'cil-settings',
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
   },
   {
     _tag: 'CSidebarNavItem',
     name: 'Terminals',
     to: '/terminals',
     icon: 'cil-calculator',
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
   },
   {
     _tag: 'CSidebarNavItem',
-    name: 'Widgets',
-    to: '/widgets',
+    name: 'Demo',
+    to: '/demo',
     icon: 'cil-calculator',
     badge: {
       color: 'info',
       text: 'NEW',
     },
+  },
+  
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Widgets',
+    to: '/widgets',
+    icon: 'cil-calculator',
   },
   {
     _tag: 'CSidebarNavDivider'
