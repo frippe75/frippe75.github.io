@@ -150,8 +150,15 @@ class TermBee extends Component {
                 onClick={ () => { this.runFit() } }
               >
               Fit
-
               </CButton>
+
+              <CButton
+                variant="ghost" color="secondary" size="sm"
+                onClick={ () => { this.props.on() } }
+              >
+              Close
+              </CButton>
+  
 
               <div className="card-header-actions">
                   <CIcon name="cil-x-circle" className="float-right"/>
@@ -177,7 +184,8 @@ TermBee.defaultProps = {
   fontSize: 20,
   background: "#0e2a35",
   loop: false,
-  speed: 1
+  speed: 1,
+  onCloseClick: () => {} // ? makes it optional
 }
 
 export default TermBee

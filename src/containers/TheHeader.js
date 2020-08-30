@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import Onliner from '../onliner'
 import {
   CHeader,
   CToggler,
@@ -22,6 +23,7 @@ import {
   TheHeaderDropdownNotif,
   TheHeaderDropdownTasks
 }  from './index'
+import online from '../onliner'
 
 const TheHeader = () => {
   const dispatch = useDispatch()
@@ -66,6 +68,7 @@ const TheHeader = () => {
       </CHeaderNav>
 
       <CHeaderNav className="px-3">
+        <Onliner></Onliner>
         <TheHeaderDropdownNotif/>
         <TheHeaderDropdownTasks/>
         <TheHeaderDropdownMssg/>

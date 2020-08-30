@@ -220,72 +220,70 @@ class Settings extends Component {
             console.log(data)
             //this.setState({ settings: data.settings })
             this.setState((currentState) => ({
-	      progress: 95           	  
+	            progress: 95           	  
             }));
-
         })
         .catch(console.log)
 	
-   	for (i; i<20; i++) {
-		await sleep(500)
-		if (this.state.progress != 100) {
-		   //progress += 10;
-		   //counter += 10;
-		   console.log("Progress: " + this.state.progress)
-		   this.setState((currentState) => ({
-	    	      progress: this.state.progress + 5           	  
-         	   }));
-                } else {
-		    break
- 		}
-   	}  
+        for (i; i<20; i++) {
+          await sleep(500)
+          if (this.state.progress != 100) {
+            //progress += 10;
+            //counter += 10;
+            console.log("Progress: " + this.state.progress)
+            this.setState((currentState) => ({
+                    progress: this.state.progress + 5           	  
+                  }));
+                      } else {
+              break
+          }
+        }  
         await sleep(1000) 
-	this.setState((currentState) => ({
-	   progress: 0           	  
+	      this.setState((currentState) => ({
+	        progress: 0           	  
         }));
-      };
+  };
 
       toggle = (index) => {
          this.setState((currentState) => ({
-	    modal: !currentState.modal,
+	          modal: !currentState.modal,
             currentSelected: index,
             currentNetwork: currentState.settings.networks[index].ssid
          }));
       };
 
-      componentDidMount() {
+  componentDidMount() {
 
-	// To be able to install PWA to Android
-        console.log("Listening for Install prompt!");
-        window.addEventListener('beforeinstallprompt',e=>{
-            // For older browsers
-            e.preventDefault();
-            console.log("Install Prompt fired!");
-            this.installPrompt = e;
-            // See if the app is already installed, in that case, do nothing
-            if((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true){
-              return false;
-            }
-            // Set the state variable to make button visible
-            this.setState({ installButton:true })
-        })
+    // To be able to install PWA to Android
+    console.log("Listening for Install prompt!");
+    window.addEventListener('beforeinstallprompt',e=>{
+        // For older browsers
+        e.preventDefault();
+        console.log("Install Prompt fired!");
+        this.installPrompt = e;
+        // See if the app is already installed, in that case, do nothing
+        if((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true){
+          return false;
+        }
+        // Set the state variable to make button visible
+        this.setState({ installButton:true })
+    })
 
-
-	espconfig.setOnConnected(function() {
-            this.setState({ connected:true })
-	}.bind(this));
+    espconfig.setOnConnected(function() {
+      this.setState({ connected:true })
+    }.bind(this));
         
-        espconfig.setOnDisconnected(function() {
-            this.setState({ connected:false })
-	}.bind(this));
+    espconfig.setOnDisconnected(function() {
+      this.setState({ connected:false })
+	  }.bind(this));
 
-        fetch('http://192.168.0.209:4001/rest/v1/settings' , {method: 'GET'})
-        .then(res => res.json())
+    fetch('http://192.168.0.209:4001/rest/v1/settings' , {method: 'GET'})
+      .then(res => res.json())
         .then((data) => {
           this.setState({ settings: data.settings })
         })
-        .catch(console.log)
-      };
+      .catch(console.log)
+    };
 
   render() {
     return (
@@ -304,7 +302,7 @@ class Settings extends Component {
 		   color="primary"
 		   variant="outline"
 		   size="sm"
-		   onClick={()=>{this.onClickPair2()}}
+		   onConClick={()=>{this.onClickPair2()}}
 		        >
 		     Pair
  		</CButton>
