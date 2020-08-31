@@ -44,6 +44,8 @@ const Toaster = () => {
   const [closeButton, setCloseButton] = useState(true)
   const [fade, setFade] = useState(true)
 
+  
+
   const addToast = () => {
     setToasts([
       ...toasts, 
@@ -60,6 +62,7 @@ const Toaster = () => {
     }, {})
   })()
 
+  console.log(toasters)
 
   return (
     <CCard>

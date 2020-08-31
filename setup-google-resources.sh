@@ -9,12 +9,14 @@ gsutil iam ch allUsers:objectViewer gs://termbee
 # Speciality pages for web site
 gsutil web set -m index.html gs://termbee
 
-# Create Serverless function 
+# Create Serverless function https://cloud.google.com/sdk/gcloud/reference/functions/deploy
 # List with gcloud functions list
-gcloud functions deploy online2 \
+#
+# Desc: returns a json with status: 'online'
+gcloud functions deploy online \
     --trigger-http \
     --region=europe-west1 \
     --runtime=nodejs10 \
     --max-instances=2 \
     --allow-unauthenticated \
-    --source=functions/online2
+    --source=functions/online

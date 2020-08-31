@@ -302,7 +302,7 @@ class Settings extends Component {
 		   color="primary"
 		   variant="outline"
 		   size="sm"
-		   onConClick={()=>{this.onClickPair2()}}
+		   onClick={()=>{this.onClickPair2()}}
 		        >
 		     Pair
  		</CButton>

@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Copy (should sync really..)
-gsutil cp -r build/* gs://termbee
+gsutil -m cp -r build/* gs://termbee
