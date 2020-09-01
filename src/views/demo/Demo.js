@@ -61,6 +61,8 @@ class Demo extends Component {
     this.onClickLogin = this.onClickLogin.bind(this)
     this.onLayoutChange = this.onLayoutChange.bind(this)
     this.resetLayout = this.resetLayout.bind(this)
+    this.onResizeStop = this.onResizeStop.bind(this)
+    this.onResize = this.onResize.bind(this)
   }
 
   componentDidMount() {
@@ -84,6 +86,7 @@ class Demo extends Component {
     /*eslint no-console: 0*/
     saveToLS("layout", layout);
     this.setState({ layout });
+
     //this.props.onLayoutChange(layout); // updates status display
   }
   /*
@@ -92,6 +95,17 @@ class Demo extends Component {
     this.setState({ layout: _.reject(this.state.layout, { i: i }) });
   }
   */
+
+ onResizeStop() {
+
+  // TODO: Quick and dirty way to call the fit method of the TermBee component
+  this.refs.child1.runFit()
+ }
+ onResize() {
+
+  // TODO: Quick and dirty way to call the fit method of the TermBee component
+  this.refs.child2.runFit()
+ }
   /*
       Functions related to idler 
   */
@@ -150,6 +164,8 @@ class Demo extends Component {
             rowHeight={40} 
             width={2200}
             onLayoutChange={this.onLayoutChange}
+            onResizeStop={this.onResizeStop}
+            onResize={this.onResize}
           >
 
 
@@ -175,11 +191,11 @@ class Demo extends Component {
             </div>
   
             <div key="c">
-              <TermBee name={"Running htop"} loop={true} background={"#000000"} speed={0.7} rows={24} cols={80} cast={"termbee-htop.cast"}/>
+              <TermBee ref="child1" name={"Running htop"} loop={true} background={"#000000"} speed={0.7} rows={24} cols={80} cast={"termbee-htop.cast"}/>
             </div>
             
             <div key="d">
-              <TermBee name={"Apache access.log tail"} loop={true} background={"#333333"} speed={1} rows={26} cols={135} cast={"termbee-apache.cast"}/>
+              <TermBee ref="child2" name={"Apache access.log tail"} loop={true} background={"#333333"} speed={1} rows={26} cols={135} cast={"termbee-apache.cast"}/>
             </div>
 
             <div key="f"></div>
@@ -205,6 +221,8 @@ class Demo extends Component {
         <CModal 
           centered={true}
           show={this.state.modal}  
+          backdrop={"static"}
+          keyboard={false}
         >
           <CModalBody>
             <CForm>
