@@ -28,6 +28,17 @@ import {
 
 import CIcon from '@coreui/icons-react'
 
+const logDataView = (labelOfDataSource, key, valueDataView) => {
+  const hexString = [...new Uint8Array(valueDataView.buffer)].map(b => {
+    return b.toString(16).padStart(2, '0');
+  }).join(' ');
+  const textDecoder = new TextDecoder('ascii');
+  const asciiString = textDecoder.decode(valueDataView.buffer);
+  console.log(`  ${labelOfDataSource} Data: ` + key +
+      '\n    (Hex) ' + hexString +
+      '\n    (ASCII) ' + asciiString);
+};
+
 const getBadge = status => {
   switch (status) {
     case 'connected': return 'success'
@@ -142,6 +153,66 @@ class Settings extends Component {
     }
   }
 
+  // https://webbluetoothcg.github.io/web-bluetooth/#permission-api-integration
+  //
+  // Requires flag: #enable-web-bluetooth-new-permissions-backend
+  //
+  // https://stackoverflow.com/questions/60604388/web-bluetooth-get-paired-devices-list
+  //
+  
+  onClickReconnect() {
+
+    espconfig.reconnect()
+    
+    /*
+    // https://googlechrome.github.io/samples/web-bluetooth/get-devices.html
+    console.log('Getting existing permitted Bluetooth devices...');
+    navigator.bluetooth.getDevices()
+    .then(devices => {
+      console.log('> Got ' + devices.length + ' Bluetooth devices.');
+      for (const device of devices) {
+        console.log(device)
+        console.log('  > ' + device.name + ' (' + device.id + ')');
+
+        device.addEventListener('advertisementreceived', (event) => {
+          console.log('Advertisement received.');
+          console.log('  Device Name: ' + event.device.name);
+          console.log('  Device ID: ' + event.device.id);
+          console.log('  RSSI: ' + event.rssi);
+          console.log('  TX Power: ' + event.txPower);
+          console.log('  UUIDs: ' + event.uuids);
+          event.manufacturerData.forEach((valueDataView, key) => {
+            logDataView('Manufacturer', key, valueDataView);
+          });
+          event.serviceData.forEach((valueDataView, key) => {
+            logDataView('Service', key, valueDataView);
+          });
+        });
+
+        console.log('Watching advertisements from "' + device.name + '"...');
+        device.watchAdvertisements();
+
+      }
+      
+    })
+    .catch(error => {
+      console.log('Argh! ' + error);
+    });
+  */
+
+   /* This does not work yet 
+    navigator.permissions.query({
+      name: "bluetooth",
+      deviceId: sessionStorage.lastDevice,
+    }).then(result => {
+      if (result.devices.length == 1) {
+        return result.devices[0];
+      } else {
+        throw new DOMException("Lost permission", "NotFoundError");
+      }
+    }).then(console.log("YEHA!!!"));
+    */
+  }
 
   onClickPair2() {
 	  if (!bleConnected) {
@@ -305,6 +376,14 @@ class Settings extends Component {
 		   onClick={()=>{this.onClickPair2()}}
 		        >
 		     Pair
+ 		</CButton>
+     <CButton
+		   color="primary"
+		   variant="outline"
+		   size="sm"
+		   onClick={()=>{this.onClickReconnect()}}
+		        >
+		     Reconnect
  		</CButton>
           </CCard>
 

@@ -1,3 +1,5 @@
+import { connect } from "react-redux";
+
 class Espconfig {
 
     constructor(namePrefix = "TermBee", serviceUuid = "0000aaaa-ead2-11e7-80c1-9a214cf093ae", credentialsUuid = "00005555-ead2-11e7-80c1-9a214cf093ae",
@@ -80,15 +82,57 @@ class Espconfig {
             "filters": [{
             "namePrefix": this.namePrefix
             }],
+            //acceptAllDevices: true,
             "optionalServices": [this.serviceUuid]
         };
         return navigator.bluetooth.requestDevice(options)
         .then(device => {
+            console.log(device)
+            sessionStorage.lastDevice = device.id;
             this.device = device;
             this.device.addEventListener('gattserverdisconnected', this.onDisconnected);
         });
     }
-    
+    // Fredrik
+    reconnect() {
+
+        navigator.bluetooth.getDevices()
+        .then(devices => {
+            console.log('> Got ' + devices.length + ' Bluetooth devices.');
+            for (const device of devices) {
+                if (device.name == "TermBee01") {
+                    console.log("Found TermBee01!!")
+                    this.device = device
+                    console.log('Watching advertisements from "' + device.name + '"...');
+                    
+                    this.device.addEventListener('gattserverdisconnected', this.onDisconnected);
+                    
+                    this.device.addEventListener('advertisementreceived', (event) => {
+                        console.log('Advertisement received.');
+                        console.log('  Device Name: ' + event.device.name);
+                        console.log('  Device ID: ' + event.device.id);
+                        console.log('  RSSI: ' + event.rssi);
+                        console.log('  TX Power: ' + event.txPower);
+                        console.log('  UUIDs: ' + event.uuids);
+                        /*
+                        event.manufacturerData.forEach((valueDataView, key) => {
+                          logDataView('Manufacturer', key, valueDataView);
+                        });
+                        event.serviceData.forEach((valueDataView, key) => {
+                          logDataView('Service', key, valueDataView);
+                        });
+                        */
+                      });
+
+                    device.watchAdvertisements();
+                    console.log(device)
+                    this.connect()
+                }    
+            }
+            //return Promise.reject('Device is not connected.');
+        });
+    }
+
     connect() {
         if (!this.device) {
             return Promise.reject('Device is not connected.');
